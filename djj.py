@@ -178,10 +178,14 @@ def add_subject():
     if Teacher_name == "" or Teacher_name == "Select Teacher":
         messagebox.showwarning("Input Error", "Please select a valid teacher.")
         return
-
+    if not Periods.isdigit() or not Labs.isdigit():
+                    messagebox.showwarning("Input Error", "Periods and Labs must be numbers.")
+                    return
     if Subject_id and Subject_name and Semester and Periods and Department_name and Labs and Teacher_name:
         try:
             query = "INSERT INTO timetable.subjects (Subject_id, Subject_name, Semester, Department_name, Teacher_name, No_periods, No_lab) VALUES(%s, %s, %s, %s, %s, %s, %s)"
+            
+            
             cursor.execute(query, (Subject_id, Subject_name, Semester, Department_name, Teacher_name, Periods, Labs))
             con.commit()
             messagebox.showinfo("Success", "Subject Added Successfully!")
@@ -212,7 +216,7 @@ def del_subject():
             query = "DELETE FROM timetable.subjects WHERE  Subject_id = %s"
             cursor.execute(query, (Subject_id,))
             con.commit()
-            messagebox.showinfo("Success","Taecher Deleted Successfully!")
+            messagebox.showinfo("Success","Subject Deleted Successfully!")
 
             #clear the entry after adding
             subject_id_entry.delete(0, tk.END)
@@ -278,11 +282,13 @@ tk.Label(subject_frame, text="DEPARTMENT NAME:").grid(row=3, column=0, sticky="w
 department_var = tk.StringVar()
 department_menu = ttk.Combobox(subject_frame, textvariable=department_var, values=[],  state="readonly")
 department_menu.grid(row=3, column=1, padx=10, sticky="w")
+update_departments()
 
 tk.Label(subject_frame, text="TEACHER NAME:").grid(row=3, column=2, sticky="w", pady=5)
 teacher_var = tk.StringVar()
 teacher_menu = ttk.Combobox(subject_frame, textvariable=teacher_var, values=[],  state="readonly")
 teacher_menu.grid(row=3, column=3, padx=10, sticky="w")
+update_teachers()
 
 
 tk.Button(subject_frame, text="ADD SUBJECT", command=add_subject).grid(row=4, column=0, pady=10)
